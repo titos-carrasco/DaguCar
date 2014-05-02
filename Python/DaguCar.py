@@ -120,7 +120,6 @@ class DaguCar:
                     self._lastCmd=cmd
             except serial.SerialTimeoutException:
                 self._Debug('DaguCar.Move: SerialTimeoutException')
-                cmd = -1
             except serial.SerialException:
                 self._Debug('DaguCar.Move: SerialException')
             except:

@@ -19,7 +19,7 @@ from DaguCar import DaguCar
 class Main:
     def __init__(self):
         self.builder = Gtk.Builder()
-        self.builder.add_from_file("Resources/DaguCar.glade")
+        self.builder.add_from_file("Resources/GUI.glade")
         self.builder.connect_signals(self)
         self.window = self.builder.get_object("MainWindow")
         self.window.show_all()
