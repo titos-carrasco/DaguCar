@@ -1,23 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Simple test for the DaguCar/iRacer API
+"""Test simple para la API del DaguCar/iRacer
 
-A simple GUI (Glade) + Joystick to control the DaguCar/iRacer car.
-We use a thread to read the joystick
+GUI desarrollada en Glade3 para controlar con joystick y teclado
+el auto DaguCar/iRacer.
+
+Utilizamos un hilo para procesar el joystick.
 """
 
 from gi.repository import Gtk
 from threading import Thread
 import pygame
 import time
-
-import sys
-sys.path.append('./')
 from DaguCar import DaguCar
 
 
-class Main:
+class MyApp:
     def __init__(self):
+        """Construye la GUI desde el archivo glade"""
         self.builder = Gtk.Builder()
         self.builder.add_from_file("Resources/GUI.glade")
         self.builder.connect_signals(self)
@@ -35,34 +35,35 @@ class Main:
         self.TJoystick = None
 
     def OnDeleteWindow(self, *args):
-        """Process the Delete Window event."""
+        """Procesa el evento de cerrar ventana - Delete Window."""
         self.OnQuit(*args)
 
     def OnQuit(self, *args):
-        """Process the Quit event."""
+        """Procesa el evento de salir - Quit."""
         self.Connect.set_active(False)
         Gtk.main_quit()
 
     def OnActive(self, *args):
-        """Process the On/Off event."""
+        """Procesa el evento OnActive del boton On/Off tipo switch."""
         if(self.Connect.get_active()):
-            self._SbSetMessage()
-            self.car = DaguCar(self.Port.get_text())
-            if(self.car.IsConnected()):
-                self.MoveButtons.set_sensitive(True)
-                self.Speed.set_sensitive(True)
-                self.Port.set_sensitive(False)
-                self._SbSetMessage("Conectado a %s" % (self.Port.get_text()))
-                pygame.init()
+            self._SbSetMessage("Conectando...")
+            try:
+                self.car = DaguCar(self.Port.get_text())
+            except Exception as e:
+                self.Connect.set_active(False)
+                self._SbSetMessage("Error al conectar...")
+                return
+            self.MoveButtons.set_sensitive(True)
+            self.Speed.set_sensitive(True)
+            self.Port.set_sensitive(False)
+            self.Connect.set_label("Desconectar")
+            self._SbSetMessage("Conectado a %s" % (self.Port.get_text()))
 
-                # start the Joystock thread
-                if(pygame.joystick.get_count()>0):
-                    self.TJoystick = Thread(target=self._Joystick, args=())
-                    self.TJoystick.start()
-            else:
-                self.Connect.set_active(False);
-                self.car = None
-                self._SbSetMessage("Error al conectar")
+            # Inicia el hilo del joystick
+            pygame.init()
+            if(pygame.joystick.get_count()>0):
+                self.TJoystick = Thread(target=self._Joystick, args=())
+                self.TJoystick.start()
         else:
             if(self.car!=None):
                 self.car.Close()
@@ -70,74 +71,75 @@ class Main:
                 self.MoveButtons.set_sensitive(False)
                 self.Speed.set_sensitive(False)
                 self.Port.set_sensitive(True)
-                self._SbSetMessage("Desconectado")
+                self.Connect.set_label("Conectar")
+                self._SbSetMessage("Desconectado...")
 
                 # stop the joystick thread
                 if(self.TJoystick!=None):
                     self.TJoystick.join()
                     self.TJoystick = None
                 pygame.quit()
-        return
 
     def OnSpeedChanged(self, *args):
-        """Process the speed change event."""
+        """Procesa el evento de cambio de velocidad - SpeedChange."""
         self.SpeedValue = int(self.Speed.props.adjustment.get_value())
 
     def OnUp(self, *args):
-        """Process the Up event."""
+        """Procesa el evento de avanzar - Up."""
         self.car.Move(DaguCar.CMD_FORWARD, self.SpeedValue)
 
     def OnUpLeft(self, *args):
-        """Process the Up Left event."""
+        """Procesa el evento avanzar izquierda - UpLeft."""
         self.car.Move(DaguCar.CMD_LEFT_FORWARD, self.SpeedValue)
 
     def OnUpRight(self, *args):
-        """Process the Up Right event."""
+        """Procesa el evento de avanzar derecha - UpRight."""
         self.car.Move(DaguCar.CMD_RIGHT_FORWARD, self.SpeedValue)
 
     def OnDown(self, *args):
-        """Process the Down event."""
+        """Procesa el evento de retroceder - Down."""
         self.car.Move(DaguCar.CMD_BACKWARD, -self.SpeedValue)
 
     def OnDownLeft(self, *args):
-        """Process the Down Right event."""
+        """Procesa el evento de retroceder izquierda - DownLeft."""
         self.car.Move(DaguCar.CMD_LEFT_BACKWARD, self.SpeedValue)
 
     def OnDownRight(self, *args):
-        """Process the Down Right event."""
+        """Procesa el evento de retroceder derecha - DownRight."""
         self.car.Move(DaguCar.CMD_RIGHT_BACKWARD, self.SpeedValue)
 
     def OnLeft(self, *args):
-        """Process the Left event."""
+        """Procesa el evento mover izquierda - Left."""
         self.car.Move(DaguCar.CMD_LEFT,self.SpeedValue)
 
     def OnRight(self, *args):
-        """Process the Right event."""
+        """Procesa el evento de mover derecha - Right."""
         self.car.Move(DaguCar.CMD_RIGHT, self.SpeedValue)
 
     def OnStop(self, *args):
-        """Process the Release Buttons events."""
+        """Procesa el evento de detener - Stop."""
         self.car.Stop()
 
     def _SbSetMessage(self, msg=None):
-        """Put a message in the status bar."""
+        """Coloca un mensaje en la barra de estado."""
         self.StatusBar.pop(self.SbContextId)
         if(msg!=None):
             self.StatusBar.push(self.SbContextId, msg)
 
     def _Joystick(self, *args):
-        """Thread to process the joystick events."""
+        """Hilo que procesa los eventos del joystick."""
         joystick = pygame.joystick.Joystick(0)
         joystick.init()
         axes = [0]*joystick.get_numaxes()
         (_x, _y) = (0, 0)
 
-        # process while the object exists
+        # procesa mientras el objeto del auto exista
         while(self.car!=None):
             try:
-                pygame.event.pump()
-                for i in range(len(axes)):
-                    axes[i] = round(joystick.get_axis(i),0)
+                events = pygame.event.get()
+                for event in events:
+                    if(event.type == pygame.JOYAXISMOTION and event.joy == 0):
+                        axes[event.axis] = int(round(event.value, 0))
                 (x, y) = (axes[0], -axes[1])
                 if((_x, _y)!=(x, y)):
                     (_x, _y) = (x, y)
@@ -163,10 +165,9 @@ class Main:
             except:
                 break
 
-
 def main():
-    """main() for the application."""
-    app = Main()
+    """main() para la aplicación."""
+    app = MyApp()
     Gtk.main()
 
 if __name__ == "__main__":

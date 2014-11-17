@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-"""Bluetooth control for the DaguCar/iRacer car.
+"""Clase para controlar el auto DaguCar/iRacer vía bluetooth.
 
-Implements the commands required to control de DaguCar/iRacer car via
+Implementa los comandos requeridos para controlar el auto DaguCar/iRacer vía
 bluetooth.
 
-You can read the spec in the "DaguCarCommands.pdf" file.
+Las especificaciones pueden ser encontradas el archivo "DaguCarCommands.pdf".
 
-More info in https://www.sparkfun.com/products/11162
+Mayor información se puede encontrar en
+https://www.sparkfun.com/products/11162
 """
 
 import serial
@@ -14,47 +15,48 @@ import threading
 
 
 class DaguCar:
-    """Class to control the car
+    """Clase para controlar el auto DaguCar/iRacer.
 
-    Usage:
-        car = DaguCar("/dev/rfcomm0")
-        if(car.IsConnected()):
-            car.Move(DaguCar.CMD_FORWARD, 15)
-            time.sleep(1)
-            car.Stop()
-            car.Close()
+    Uso:
+        try:
+            car = DaguCar("/dev/rfcomm0")
+        except:
+            sys.exit(1)
+        car.Move(DaguCar.CMD_FORWARD, 15)
+        time.sleep(1)
+        car.Stop()
+        car.Close()
+
     """
+
     def __init__(self, port):
-        """Create the DaguCar/iRacer object and open a connection to the car.
+        """Crea el objeto DaguCar/iRacer y abre una comunicación serial.
 
         Args:
-            port: The serial port to use (string)
+            port: La puerta serial a utilizar(string)
 
-        Raises:
-            KeyboardInterrupt
+        Excepciones:
+            Las generadas por serial.Serial() y otras de valor en los
+            parámetros
         """
         self._lock = threading.Lock()
         self._ser = None
         self._lastCmd = 0x00
         for t in range(4):
             try:
-                self._ser = serial.Serial(port, baudrate=9600, bytesize=8,
+                self._ser = serial.Serial(port, baudrate="9600", bytesize=8,
                                           parity='N', stopbits=1, timeout=1)
-                self._Debug('DaguCar.Init: Connected to %s, 9600 bps' %
+                self._Debug('DaguCar.Init: Conectado a %s, 9600 bps' %
                             (port))
-                break
+                return
             except serial.SerialException:
-                self._Debug('DaguCar.Init: SerialException')
-            except ValueError:
-                self._Debug('DaguCar.Init: ValueError')
-            except IOError:
-                self._Debug('DaguCar.Init: IOError')
-            except KeyboardInterrupt:
-                self._Debug('DaguCar.Init: KeyboardInterrupt')
+                self._Debug('DaguCar.Init: SerialException (%d)' % (t + 1))
+            except Exception as e:
                 raise
+        raise serial.SerialException
 
     def _Lock(self):
-        """Get an exclusive access to the car."""
+        """Obtiene acceso exclusivo al auto."""
         self._lock.acquire()
         if(self._ser!=None and self._ser.isOpen()):
             return True
@@ -63,33 +65,33 @@ class DaguCar:
             return False
 
     def _Unlock(self):
-        """Release the exclusive access to the car."""
+        """Libera el acceso exclusivo al auto."""
         try:
             self._lock.release()
-        except:
+        except Exception as e:
             pass
 
     def _Debug(self, val):
-        """Simple console debug."""
-        print val
+        """Debug simple para consola."""
+        print(val)
 
     def IsConnected(self):
-        """True if connected to the car."""
+        """True si estamos conectados al auto."""
         try:
             if(self._ser.isOpen()):
                 return True
-        except:
+        except Exception as e:
             pass
         return False
 
     def Close(self):
-        """Close the connection to the car."""
+        """Cerramos la conexión al auto."""
         if(self._Lock()):
             self._ser.close()
             self._ser = None
             self._Unlock()
 
-    # Commands for the car
+    # Comandos para el auto
     CMD_STOP = 0
     CMD_FORWARD = 1
     CMD_BACKWARD = 2
@@ -101,11 +103,14 @@ class DaguCar:
     CMD_RIGHT_BACKWARD = 8
 
     def Move(self, direction, speed):
-        """Move the car
+        """Mueve el auto.
 
         Args:
-            direction: The direction for the car (DaguCar.CMD_XXX)
-            speed: 0 to 15
+            direction: La dirección del auto (DaguCar.CMD_XXX)
+            speed: 0 a 15
+
+        Excepciones:
+            Generadas principalmente por serial.write()
         """
         if(self._Lock()):
             try:
@@ -118,14 +123,11 @@ class DaguCar:
                 if(cmd!=self._lastCmd):
                     self._ser.write(chr(cmd))
                     self._lastCmd=cmd
-            except serial.SerialTimeoutException:
-                self._Debug('DaguCar.Move: SerialTimeoutException')
-            except serial.SerialException:
-                self._Debug('DaguCar.Move: SerialException')
-            except:
-                self._Debug('DaguCar.Move: Unexpected Exception')
+            except Exception as e:
+                self._Unlock()
+                raise
             self._Unlock()
 
     def Stop(self):
-        """Stop the car."""
+        """Detiene el auto."""
         self.Move(DaguCar.CMD_STOP, 0)

@@ -7,13 +7,10 @@ A simple interface to control the car using the CV2 and Numpy libraries
 
 import cv2
 import numpy as np
-
-import sys
-sys.path.append('./')
 from DaguCar import DaguCar
 
 
-class Main:
+class MyApp:
     def __init__(self):
         self._tps = cv2.getTickFrequency()
         self._imgH = 240
@@ -52,7 +49,7 @@ class Main:
         cv2.createTrackbar('Speed', 'Frames', 0, 15, self._TBSpeed )
 
         # procesamos hasta que recibamos ESC
-        useRobot = 0
+        useRobot = 1
         t1=cv2.getTickCount()
         while True:
             # capturamos un cuadro
@@ -126,10 +123,12 @@ class Main:
 
 def main():
     """main() for the application."""
-    app = Main()
-    robot = DaguCar("/dev/rfcomm1")
-    app.Run(0, robot)
-
+    app = MyApp()
+    try:
+        robot = DaguCar("/dev/rfcomm1")
+        app.Run(0, robot)
+    except Exception as e:
+        print e
 
 if __name__ == "__main__":
     main()

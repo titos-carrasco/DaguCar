@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.18.3 -->
 <interface>
-  <!-- interface-requires gtk+ 3.0 -->
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkAdjustment" id="SpeedAdjustment">
     <property name="upper">16</property>
     <property name="step_increment">1</property>
@@ -77,16 +78,12 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="image">goLeftUp</property>
-                    <property name="image_position">right</property>
-                    <property name="always_show_image">True</property>
-                    <signal name="pressed" handler="OnUpLeft" swapped="no"/>
-                    <signal name="released" handler="OnStop" swapped="no"/>
+                    <signal name="button-press-event" handler="OnUpLeft" swapped="no"/>
+                    <signal name="button-release-event" handler="OnStop" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">0</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -95,14 +92,12 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="image">goUp</property>
-                    <signal name="pressed" handler="OnUp" swapped="no"/>
-                    <signal name="released" handler="OnStop" swapped="no"/>
+                    <signal name="button-press-event" handler="OnUp" swapped="no"/>
+                    <signal name="button-release-event" handler="OnStop" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="top_attach">0</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -111,14 +106,12 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="image">goRightUp</property>
-                    <signal name="pressed" handler="OnUpRight" swapped="no"/>
-                    <signal name="released" handler="OnStop" swapped="no"/>
+                    <signal name="button-press-event" handler="OnUpRight" swapped="no"/>
+                    <signal name="button-release-event" handler="OnStop" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="top_attach">0</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -127,14 +120,12 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="image">goRightDown</property>
-                    <signal name="pressed" handler="OnDownRight" swapped="no"/>
-                    <signal name="released" handler="OnStop" swapped="no"/>
+                    <signal name="button-press-event" handler="OnDownRight" swapped="no"/>
+                    <signal name="button-release-event" handler="OnStop" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="top_attach">2</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -143,14 +134,12 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="image">goDown</property>
-                    <signal name="pressed" handler="OnDown" swapped="no"/>
-                    <signal name="released" handler="OnStop" swapped="no"/>
+                    <signal name="button-press-event" handler="OnDown" swapped="no"/>
+                    <signal name="button-release-event" handler="OnStop" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="top_attach">2</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -159,14 +148,12 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="image">goLeftDown</property>
-                    <signal name="pressed" handler="OnDownLeft" swapped="no"/>
-                    <signal name="released" handler="OnStop" swapped="no"/>
+                    <signal name="button-press-event" handler="OnDownLeft" swapped="no"/>
+                    <signal name="button-release-event" handler="OnStop" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">2</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -175,14 +162,12 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="image">goLeft</property>
-                    <signal name="pressed" handler="OnLeft" swapped="no"/>
-                    <signal name="released" handler="OnStop" swapped="no"/>
+                    <signal name="button-press-event" handler="OnLeft" swapped="no"/>
+                    <signal name="button-release-event" handler="OnStop" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">1</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -191,14 +176,12 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="image">goRight</property>
-                    <signal name="pressed" handler="OnRight" swapped="no"/>
-                    <signal name="released" handler="OnStop" swapped="no"/>
+                    <signal name="button-press-event" handler="OnRight" swapped="no"/>
+                    <signal name="button-release-event" handler="OnStop" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="top_attach">1</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -230,8 +213,6 @@
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">2</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -245,8 +226,6 @@
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">3</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
@@ -272,7 +251,7 @@
                         <property name="hexpand">True</property>
                         <property name="vexpand">True</property>
                         <property name="invisible_char">●</property>
-                        <property name="text" translatable="yes">/dev/rfcomm0</property>
+                        <property name="text" translatable="yes">/dev/rfcomm1</property>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -284,21 +263,19 @@
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">0</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkSwitch" id="Connect">
+                  <object class="GtkToggleButton" id="Connect">
+                    <property name="label" translatable="yes">Conectar</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <signal name="notify::active" handler="OnActive" swapped="no"/>
+                    <property name="receives_default">True</property>
+                    <signal name="toggled" handler="OnActive" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">1</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
                   </packing>
                 </child>
               </object>

@@ -1,18 +1,29 @@
-#DaguCar
+#DaguCar/iRacer
 
-Code to control the DaguCar/iRacer car (bluetooth)
+Código para controlar el auto DaguCar/iRacer (bluetooth)
 
-You can get detailed information from
-[sparkfun](https://www.sparkfun.com/products/11162)
+Mayor información puede ser encontrada en
+[sparkfun](https://www.sparkfun.com/products/11162). En particular existe
+un problema con la bateria que deja de cargar después de cierto tiempo.
+Para solucionarlo, aplicar directamente 5V a los pines de la bateria
+(ver conectores + y - en la placa al costado del botón de encendido)
 
-The Doc directory contains a PDF file with the commands to control the car.
+El directorio Doc/ contiene un archivo PDF con los comandos que controlan
+al auto
 
-The Python directory contains the code in Python
+El directorio Python/ contiene el código en Python
+
+El directorio Cpp/ contiene el código en C++
+
 
 ***
-###History
-* May 1, 2014: Move python code to Python directory and begins port to C++
-* April 13, 2014: Add inline documentation and rewrite some code
-* April 7, 2014:Cosmetic changes
-* March 30, 2014: Add a Glade interface to test the Api
-* March 8, 2014: Initial commit. Move the code from GoogleCode to GitHub
+###Historia
+* Nov 13, 2014: Todos los textos a español, corrige código ante errores de
+apertura serial. Se cambia el widget GtkSwitch por un toggle button ante
+errores de procesamiento en evento Activate
+* May 1, 2014: Se mueve el código al directorio Python/ y se inicia
+la versión C++
+* Abr 13, 2014: agrega documentación en línea y reescribe código
+* Abr 7, 2014: Cambios cosméticos
+* Mar 30, 2014: Agrega interface en Glade para testear el código
+* Mar 8, 2014: Commit inicial. Se mueve el código desde GoogleCode a GitHub
