@@ -18,6 +18,8 @@ El directorio Cpp/ contiene el código en C++
 
 ***
 ###Historia
+* Jan 15, 2015: Agrega código Java y realiza correcciones menores en código
+Python. El código Java es trabajado en Geany (ver Java.geany en el directorio)
 * Nov 13, 2014: Todos los textos a español, corrige código ante errores de
 apertura serial. Se cambia el widget GtkSwitch por un toggle button ante
 errores de procesamiento en evento Activate
