@@ -12,28 +12,43 @@ https://www.sparkfun.com/products/11162
 
 import serial
 import threading
-
+import time
 
 class DaguCar:
     """Clase para controlar el auto DaguCar/iRacer.
 
     Uso:
+        from DaguCar import DaguCar
         try:
-            car = DaguCar("/dev/rfcomm0")
-        except:
+            car = DaguCar("/dev/rfcomm1")
+        except Exception as e:
+            print(e)
             sys.exit(1)
         car.Move(DaguCar.CMD_FORWARD, 15)
-        time.sleep(1)
+        car.Wait(1000)
         car.Stop()
         car.Close()
 
     """
+    # Comandos para el auto
+    CMD_STOP = 0
+    CMD_FORWARD = 1
+    CMD_BACKWARD = 2
+    CMD_LEFT = 3
+    CMD_RIGHT = 4
+    CMD_LEFT_FORWARD = 5
+    CMD_RIGHT_FORWARD = 6
+    CMD_LEFT_BACKWARD = 7
+    CMD_RIGHT_BACKWARD = 8
 
-    def __init__(self, port):
+    def __init__(self, port, bauds=9600, timeout=3):
         """Crea el objeto DaguCar/iRacer y abre una comunicación serial.
+        La pausa de 4 segundos es requerida para que se estabilice
 
         Args:
-            port: La puerta serial a utilizar(string)
+            port: La puerta serial a utilizar (string)
+            bauds: La velocidad de la conexión (9600)
+            timeout: El tiempo de espera por la conexión (3 segundos)
 
         Excepciones:
             Las generadas por serial.Serial() y otras de valor en los
@@ -42,18 +57,22 @@ class DaguCar:
         self._lock = threading.Lock()
         self._ser = None
         self._lastCmd = 0x00
-        for t in range(4):
+        for t in range(10):
             try:
-                self._ser = serial.Serial(port, baudrate="9600", bytesize=8,
-                                          parity='N', stopbits=1, timeout=1)
-                self._Debug('DaguCar.Init: Conectado a %s, 9600 bps' %
-                            (port))
+                self._ser = serial.Serial(port, baudrate=bauds, bytesize=8,
+                                          parity='N', stopbits=1, timeout=timeout)
+                self._Debug('DaguCar.Init: Conectado en %s a %d bps' %
+                            (port, bauds))
+                self.Wait(4000)
                 return
-            except serial.SerialException:
+            except serial.SerialException as e:
+                self._Debug(e)
                 self._Debug('DaguCar.Init: SerialException (%d)' % (t + 1))
             except Exception as e:
+                self._Debug(e)
+                self._Debug('DaguCar.Init: Error no considerado')
                 raise
-        raise serial.SerialException
+        raise serial.SerialException("DaguCar.Init: No es posible establecer la conexión")
 
     def _Lock(self):
         """Obtiene acceso exclusivo al auto."""
@@ -91,16 +110,8 @@ class DaguCar:
             self._ser = None
             self._Unlock()
 
-    # Comandos para el auto
-    CMD_STOP = 0
-    CMD_FORWARD = 1
-    CMD_BACKWARD = 2
-    CMD_LEFT = 3
-    CMD_RIGHT = 4
-    CMD_LEFT_FORWARD = 5
-    CMD_RIGHT_FORWARD = 6
-    CMD_LEFT_BACKWARD = 7
-    CMD_RIGHT_BACKWARD = 8
+    def Wait(self, ms):
+        time.sleep(ms/1000.0)
 
     def Move(self, direction, speed):
         """Mueve el auto.
@@ -124,6 +135,7 @@ class DaguCar:
                     self._ser.write(chr(cmd))
                     self._lastCmd=cmd
             except Exception as e:
+                self._Debug(e)
                 self._Unlock()
                 raise
             self._Unlock()

@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 """Test simple para la API del DaguCar/iRacer
 
-GUI desarrollada en Glade3 para controlar con joystick y teclado
-el auto DaguCar/iRacer.
+GUI desarrollada en Glade3 para controlar con joystick el auto DaguCar/iRacer.
 
 Utilizamos un hilo para procesar el joystick.
 """
@@ -43,8 +42,8 @@ class MyApp:
         self.Connect.set_active(False)
         Gtk.main_quit()
 
-    def OnActive(self, *args):
-        """Procesa el evento OnActive del boton On/Off tipo switch."""
+    def OnConnect(self, *args):
+        """Procesa el evento OnConnect del boton On/Off tipo switch."""
         if(self.Connect.get_active()):
             self._SbSetMessage("Conectando...")
             try:
@@ -59,7 +58,7 @@ class MyApp:
             self.Connect.set_label("Desconectar")
             self._SbSetMessage("Conectado a %s" % (self.Port.get_text()))
 
-            # Inicia el hilo del joystick
+           # Inicia el hilo del joystick
             pygame.init()
             if(pygame.joystick.get_count()>0):
                 self.TJoystick = Thread(target=self._Joystick, args=())
@@ -74,7 +73,7 @@ class MyApp:
                 self.Connect.set_label("Conectar")
                 self._SbSetMessage("Desconectado...")
 
-                # stop the joystick thread
+                # Detiene el hilo del joystick
                 if(self.TJoystick!=None):
                     self.TJoystick.join()
                     self.TJoystick = None
@@ -164,6 +163,7 @@ class MyApp:
                 time.sleep(0.1)
             except:
                 break
+
 
 def main():
     """main() para la aplicación."""

@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Simple test for the DaguCar/iRacer API
+"""Test simple para la API del DaguCar/iRacer
 
-A simple interface to control the car using the CV2 and Numpy libraries
+Una interface simple para controlar el auto utilizando las librerías
+CV2 y Numpy a través de la detección de un círculo y el desplazamiento
+de éste.
 """
 
 import cv2
@@ -36,7 +38,7 @@ class MyApp:
             return img, (c[0], c[1])
         return img, None
 
-    def Run(self, device, robot):
+    def Run(self, device, car):
         # abrimos dispositivo de captura
         cap = cv2.VideoCapture(0)
 
@@ -49,7 +51,7 @@ class MyApp:
         cv2.createTrackbar('Speed', 'Frames', 0, 15, self._TBSpeed )
 
         # procesamos hasta que recibamos ESC
-        useRobot = 1
+        useCar = 0
         t1=cv2.getTickCount()
         while True:
             # capturamos un cuadro
@@ -79,42 +81,43 @@ class MyApp:
             cv2.imshow('Frames', frame)
             t1=t2
 
-            # control por teclado
+            # ESC finaliza
             k = cv2.waitKey(5)
             if(k==27):
                 break
-            elif(k==115): # 's'
-                if(useRobot):
-                    robot.Stop()
-                useRobot = ~useRobot
+            # La tecla S habilita/deshabilita el control del auto
+            elif(k==115):
+                if(useCar):
+                    car.Stop()
+                useCar = ~useCar
 
-            # movemos el robot
-            if(useRobot):
+            # movemos el auto
+            if(useCar):
                 if(center!=None):
                     x, y = center
                     if(x<self._zonaL):
                         if(y<self._zonaT):
-                            robot.Move(DaguCar.CMD_LEFT_FORWARD, self._speed)
+                            car.Move(DaguCar.CMD_LEFT_FORWARD, self._speed)
                         elif(y>self._zonaB):
-                            robot.Move(DaguCar.CMD_LEFT_BACKWARD, self._speed)
+                            car.Move(DaguCar.CMD_LEFT_BACKWARD, self._speed)
                         else:
-                            robot.Move(DaguCar.CMD_LEFT, self._speed)
+                            car.Move(DaguCar.CMD_LEFT, self._speed)
                     if(x>self._zonaR):
                         if(y<self._zonaT):
-                            robot.Move(DaguCar.CMD_RIGHT_FORWARD, self._speed)
+                            car.Move(DaguCar.CMD_RIGHT_FORWARD, self._speed)
                         elif(y>self._zonaB):
-                            robot.Move(DaguCar.CMD_RIGHT_BACKWARD, self._speed)
+                            car.Move(DaguCar.CMD_RIGHT_BACKWARD, self._speed)
                         else:
-                            robot.Move(DaguCar.CMD_RIGHT, self._speed)
+                            car.Move(DaguCar.CMD_RIGHT, self._speed)
                     else:
                         if(y<self._zonaT):
-                            robot.Move(DaguCar.CMD_FORWARD, self._speed)
+                            car.Move(DaguCar.CMD_FORWARD, self._speed)
                         elif(y>self._zonaB):
-                            robot.Move(DaguCar.CMD_BACKWARD, self._speed)
+                            car.Move(DaguCar.CMD_BACKWARD, self._speed)
                         else:
-                            robot.Move(DaguCar.CMD_STOP, self._speed)
+                            car.Move(DaguCar.CMD_STOP, self._speed)
                 else:
-                    robot.Stop()
+                    car.Stop()
 
         # eso es todo
         cap.release()
@@ -122,13 +125,13 @@ class MyApp:
 
 
 def main():
-    """main() for the application."""
+    """main() de la aplicación."""
     app = MyApp()
     try:
-        robot = DaguCar("/dev/rfcomm1")
-        app.Run(0, robot)
+        car = DaguCar("/dev/rfcomm1")
+        app.Run(0, car)
     except Exception as e:
-        print e
+        print(e)
 
 if __name__ == "__main__":
     main()
