@@ -23,9 +23,7 @@ long_line_behaviour=1
 long_line_column=78
 
 [files]
-current_page=1
-FILE_NAME_0=5018;Java;0;EUTF-8;0;1;0;%2Fhome%2Froberto%2FProjects%2FGitHub%2FDaguCar%2FJava%2Fsrc%2Frcr%2Frobots%2Fdagucar%2FDaguCar.java;0;4
-FILE_NAME_1=408;Java;0;EUTF-8;0;1;0;%2Fhome%2Froberto%2FProjects%2FGitHub%2FDaguCar%2FJava%2FTestDaguCar.java;0;4
+current_page=-1
 
 [build-menu]
 EX_00_LB=_Execute

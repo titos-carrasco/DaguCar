@@ -1,6 +1,11 @@
+#include <strings.h>
+#include <termios.h>
+#include <fcntl.h>
+#include <unistd.h>
+
 #include "SerialPort.h"
 
-SerialPort::SerialPort( const char *port, int bauds )
+SerialPort::SerialPort( const char *port, unsigned int bauds, unsigned int timeout )
 {
     // O_NOCTTY=no controlling terminal, O_NDELAY=dont use DCD
     fd = open( port, O_RDWR | O_NOCTTY | O_NDELAY );
@@ -12,7 +17,7 @@ SerialPort::SerialPort( const char *port, int bauds )
 
     // limpia estructura termios
     struct termios options;
-    tcgetattr( fd, &options );
+    //tcgetattr( fd, &options );
     bzero( &options, sizeof( options ) );
 
     // la velocidad
@@ -35,7 +40,7 @@ SerialPort::SerialPort( const char *port, int bauds )
     cfsetispeed(&options, speed);
     cfsetospeed(&options, speed);
 
-    // not owner
+    // local mode and enable receiver
     options.c_cflag |= ( CLOCAL | CREAD );
 
     // 8N1
@@ -45,17 +50,17 @@ SerialPort::SerialPort( const char *port, int bauds )
     options.c_cflag |= CS8;
 
     // raw input
-    options.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+    cfmakeraw( &options );
 
     // ignore parity and break
     options.c_iflag |= ( IGNPAR | IGNBRK );
 
-    // raw output
-    options.c_oflag &= ~OPOST;
-
     // no wait
     options.c_cc[VTIME]=0;
     options.c_cc[VMIN]=0;
+
+    // flush buffers
+    tcflush( fd, TCIOFLUSH );
 
     // los cambios toman efecto desde ahora
     tcsetattr(fd, TCSANOW, &options);
@@ -63,7 +68,7 @@ SerialPort::SerialPort( const char *port, int bauds )
 
 SerialPort::~SerialPort()
 {
-    Close();
+    //Close();
 }
 
 void SerialPort::Close()
@@ -73,6 +78,11 @@ void SerialPort::Close()
 
 int SerialPort::Write( unsigned char byte )
 {
-    int n = write( fd, &byte, 1);
-    return n;
+    if( write( fd, &byte, 1) == 1 )
+    {
+        tcdrain( fd );
+        return 1;
+    }
+    else
+        return -1;
 }

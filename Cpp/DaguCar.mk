@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Roberto
-Date                   :=04/04/15
+Date                   :=04/06/15
 CodeLitePath           :="/home/roberto/.codelite"
 LinkerName             :=/usr/bin/g++ 
 SharedObjectLinkerName :=/usr/bin/g++ -shared -fPIC
@@ -50,7 +50,7 @@ LibPath                := $(LibraryPathSwitch).
 AR       := /usr/bin/ar rcu
 CXX      := /usr/bin/g++ 
 CC       := /usr/bin/gcc 
-CXXFLAGS :=  -O2 -std=c++11 -Wall $(Preprocessors)
+CXXFLAGS :=  -O2 -Wall $(Preprocessors)
 CFLAGS   :=  -O2 -Wall $(Preprocessors)
 ASFLAGS  := 
 AS       := /usr/bin/as 
@@ -60,7 +60,7 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/src_DaguCar.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_TestDaguCar.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_SerialPort.cpp$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/src_TestDaguCar.cpp$(ObjectSuffix) $(IntermediateDirectory)/utils_SerialPort.cpp$(ObjectSuffix) $(IntermediateDirectory)/utils_Lock.cpp$(ObjectSuffix) $(IntermediateDirectory)/robots_DaguCar.cpp$(ObjectSuffix) 
 
 
 
@@ -87,14 +87,6 @@ PreBuild:
 ##
 ## Objects
 ##
-$(IntermediateDirectory)/src_DaguCar.cpp$(ObjectSuffix): src/DaguCar.cpp $(IntermediateDirectory)/src_DaguCar.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/roberto/Projects/GitHub/DaguCar/Cpp/src/DaguCar.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_DaguCar.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/src_DaguCar.cpp$(DependSuffix): src/DaguCar.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_DaguCar.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/src_DaguCar.cpp$(DependSuffix) -MM "src/DaguCar.cpp"
-
-$(IntermediateDirectory)/src_DaguCar.cpp$(PreprocessSuffix): src/DaguCar.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_DaguCar.cpp$(PreprocessSuffix) "src/DaguCar.cpp"
-
 $(IntermediateDirectory)/src_TestDaguCar.cpp$(ObjectSuffix): src/TestDaguCar.cpp $(IntermediateDirectory)/src_TestDaguCar.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/roberto/Projects/GitHub/DaguCar/Cpp/src/TestDaguCar.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_TestDaguCar.cpp$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_TestDaguCar.cpp$(DependSuffix): src/TestDaguCar.cpp
@@ -103,13 +95,29 @@ $(IntermediateDirectory)/src_TestDaguCar.cpp$(DependSuffix): src/TestDaguCar.cpp
 $(IntermediateDirectory)/src_TestDaguCar.cpp$(PreprocessSuffix): src/TestDaguCar.cpp
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_TestDaguCar.cpp$(PreprocessSuffix) "src/TestDaguCar.cpp"
 
-$(IntermediateDirectory)/src_SerialPort.cpp$(ObjectSuffix): src/SerialPort.cpp $(IntermediateDirectory)/src_SerialPort.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/roberto/Projects/GitHub/DaguCar/Cpp/src/SerialPort.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_SerialPort.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/src_SerialPort.cpp$(DependSuffix): src/SerialPort.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_SerialPort.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/src_SerialPort.cpp$(DependSuffix) -MM "src/SerialPort.cpp"
+$(IntermediateDirectory)/utils_SerialPort.cpp$(ObjectSuffix): src/utils/SerialPort.cpp $(IntermediateDirectory)/utils_SerialPort.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/roberto/Projects/GitHub/DaguCar/Cpp/src/utils/SerialPort.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/utils_SerialPort.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/utils_SerialPort.cpp$(DependSuffix): src/utils/SerialPort.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/utils_SerialPort.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/utils_SerialPort.cpp$(DependSuffix) -MM "src/utils/SerialPort.cpp"
 
-$(IntermediateDirectory)/src_SerialPort.cpp$(PreprocessSuffix): src/SerialPort.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_SerialPort.cpp$(PreprocessSuffix) "src/SerialPort.cpp"
+$(IntermediateDirectory)/utils_SerialPort.cpp$(PreprocessSuffix): src/utils/SerialPort.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/utils_SerialPort.cpp$(PreprocessSuffix) "src/utils/SerialPort.cpp"
+
+$(IntermediateDirectory)/utils_Lock.cpp$(ObjectSuffix): src/utils/Lock.cpp $(IntermediateDirectory)/utils_Lock.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/roberto/Projects/GitHub/DaguCar/Cpp/src/utils/Lock.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/utils_Lock.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/utils_Lock.cpp$(DependSuffix): src/utils/Lock.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/utils_Lock.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/utils_Lock.cpp$(DependSuffix) -MM "src/utils/Lock.cpp"
+
+$(IntermediateDirectory)/utils_Lock.cpp$(PreprocessSuffix): src/utils/Lock.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/utils_Lock.cpp$(PreprocessSuffix) "src/utils/Lock.cpp"
+
+$(IntermediateDirectory)/robots_DaguCar.cpp$(ObjectSuffix): src/robots/DaguCar.cpp $(IntermediateDirectory)/robots_DaguCar.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/roberto/Projects/GitHub/DaguCar/Cpp/src/robots/DaguCar.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/robots_DaguCar.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/robots_DaguCar.cpp$(DependSuffix): src/robots/DaguCar.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/robots_DaguCar.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/robots_DaguCar.cpp$(DependSuffix) -MM "src/robots/DaguCar.cpp"
+
+$(IntermediateDirectory)/robots_DaguCar.cpp$(PreprocessSuffix): src/robots/DaguCar.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/robots_DaguCar.cpp$(PreprocessSuffix) "src/robots/DaguCar.cpp"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

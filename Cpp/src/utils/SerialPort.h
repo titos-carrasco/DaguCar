@@ -1,15 +1,10 @@
 #ifndef SERIAL_H
 #define SERIAL_H
 
-#include <strings.h>
-#include <termios.h>
-#include <fcntl.h>
-#include <unistd.h>
-
 class SerialPort
 {
     public:
-        SerialPort( const char *port, int bauds );
+        SerialPort( const char *port, unsigned int bauds, unsigned int timeout );
         ~SerialPort();
         void Close();
         int Write( unsigned char byte );

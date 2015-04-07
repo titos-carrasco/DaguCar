@@ -1,13 +1,16 @@
 #include <iostream>
 #include <time.h>
+#include <unistd.h>
+
 #include "DaguCar.h"
 
-DaguCar::DaguCar( const char *port, int _timeout )
+DaguCar::DaguCar( const char *port, unsigned int _timeout )
 {
     timeout = _timeout;
+    lastCmd = -1;
     for(int i=0; i<10 ; i++)
     {
-        ser = new SerialPort( port, 9600 );
+        ser = new SerialPort( port, 9600, timeout );
         Pause( 1000 );
         return;
     }
@@ -16,18 +19,14 @@ DaguCar::DaguCar( const char *port, int _timeout )
 
 void DaguCar::Close()
 {
-    Lock();
+    lock.lock();
     ser->Close();
-    Unlock();
+    lock.unlock();
 }
 
-void DaguCar::Pause( int ms )
+void DaguCar::Pause( unsigned int ms )
 {
-    clock_t time_end;
-    time_end = clock() + ms * CLOCKS_PER_SEC/1000;
-    while (clock() < time_end)
-    {
-    }
+    usleep( ms * 1000 );
 }
 
 
@@ -36,42 +35,42 @@ void DaguCar::Stop()
     Move( DaguCar::CMD_STOP, 0 );
 }
 
-void DaguCar::MoveForward( int speed )
+void DaguCar::MoveForward( unsigned int speed )
 {
     Move( DaguCar::CMD_FORWARD, speed & 0x0F );
 }
 
-void DaguCar::MoveBackward( int speed )
+void DaguCar::MoveBackward( unsigned int speed )
 {
     Move( DaguCar::CMD_BACKWARD, speed & 0x0F );
 }
 
-void DaguCar::MoveLeft( int speed )
+void DaguCar::MoveLeft( unsigned int speed )
 {
     Move( DaguCar::CMD_LEFT, speed & 0x0F );
 }
 
-void DaguCar::MoveRight( int speed )
+void DaguCar::MoveRight( unsigned int speed )
 {
     Move( DaguCar::CMD_RIGHT, speed & 0x0F );
 }
 
-void DaguCar::MoveForwardLeft( int speed )
+void DaguCar::MoveForwardLeft( unsigned int speed )
 {
     Move( DaguCar::CMD_FORWARD_LEFT, speed & 0x0F );
 }
 
-void DaguCar::MoveForwardRight( int speed )
+void DaguCar::MoveForwardRight( unsigned int speed )
 {
     Move( DaguCar::CMD_FORWARD_RIGHT, speed & 0x0F );
 }
 
-void DaguCar::MoveBackwardLeft( int speed )
+void DaguCar::MoveBackwardLeft( unsigned int speed )
 {
     Move( DaguCar::CMD_BACKWARD_LEFT, speed & 0x0F );
 }
 
-void DaguCar::MoveBackwardRight( int speed )
+void DaguCar::MoveBackwardRight( unsigned int speed )
 {
     Move( DaguCar::CMD_BACKWARD_RIGHT, speed & 0x0F );
 }
@@ -91,14 +90,6 @@ void DaguCar::Move( Command direction, unsigned int speed )
         ser->Write( cmd );
         lastCmd=cmd;
     }
-    Unlock();
-}
-
-void DaguCar::Lock()
-{
-    lock.lock();
-}
-
-void DaguCar::Unlock() {
     lock.unlock();
 }
+
